@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 )
 
@@ -14,6 +15,18 @@ func NewSudoku(matrix []string) *Sudoku {
 	s := &Sudoku{Matrix: matrix}
 	s.SetEdgeLength()
 	return s
+}
+
+func (s *Sudoku) PrettyPrint() {
+	s.SetEdgeLength()
+	result := [][]string{}
+	for i := 0; i < len(s.Matrix); i += s.EdgeLength {
+		result = append(result, s.Matrix[i:i+s.EdgeLength])
+	}
+	fmt.Println("Result: ")
+	for _, t := range result {
+		fmt.Println(t)
+	}
 }
 
 func (s *Sudoku) SetEdgeLength() {
@@ -61,5 +74,41 @@ func (s *Sudoku) Boxes() [][]string {
 		}
 	}
 
+	return result
+}
+
+func (s *Sudoku) ValidSolutionCount() int {
+	count := 0
+
+	for _, r := range s.Rows() {
+		if len(compactArr(r)) == s.EdgeLength {
+			count++
+		}
+	}
+
+	for _, c := range s.Columns() {
+		if len(compactArr(c)) == s.EdgeLength {
+			count++
+		}
+	}
+
+	for _, b := range s.Boxes() {
+		if len(compactArr(b)) == s.EdgeLength {
+			count++
+		}
+	}
+
+	return count
+}
+
+func compactArr(arr []string) []string {
+	result := []string{}
+	tmp := make(map[string]bool)
+	for _, item := range arr {
+		if !tmp[item] {
+			tmp[item] = true
+			result = append(result, item)
+		}
+	}
 	return result
 }
