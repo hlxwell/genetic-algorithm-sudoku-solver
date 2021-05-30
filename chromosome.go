@@ -18,12 +18,13 @@ var Dictionary = []string{"W", "O", "R", "D"}
 type Chromosome struct {
 	CurrentBestSolution *Sudoku
 	Generation          int
+	MaxGeneration       int
 	Population          []*Sudoku
 }
 
 func NewChromosome(generation int) *Chromosome {
 	return &Chromosome{
-		Generation: generation,
+		MaxGeneration: generation,
 	}
 }
 
@@ -97,13 +98,13 @@ func (c *Chromosome) Select() {
 }
 
 func (c *Chromosome) Evolve() {
-	for {
-		fmt.Println("--- Generation: ", c.Generation)
+	for i := 0; i < c.MaxGeneration; i++ {
+		fmt.Println("--- Generation: ", i)
+
 		c.Select()    // Select the best solution.
 		c.Crossover() // Best solution crossover with all elements.
 		c.Mutate()    // Random Mutate several elements.
 		c.Select()    // Select the best solution.
-		c.Generation++
 
 		if c.CurrentBestSolution.ValidSolutionCount() == 12 {
 			break
