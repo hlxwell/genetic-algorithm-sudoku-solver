@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -14,15 +13,21 @@ var matrix = []string{
 
 func TestColumns(t *testing.T) {
 	s := NewSudoku(matrix)
-	fmt.Println(s.Columns())
+	if len(s.Columns()) != s.EdgeLength {
+		t.Errorf("Columns size should be %d, but was %d", s.EdgeLength, len(s.Columns()))
+	}
 }
 
 func TestRows(t *testing.T) {
 	s := NewSudoku(matrix)
-	fmt.Println(s.Rows())
+	if len(s.Rows()) != s.EdgeLength {
+		t.Errorf("Rows size should be %d, but was %d", s.EdgeLength, len(s.Rows()))
+	}
 }
 
 func TestBoxes(t *testing.T) {
 	s := NewSudoku(matrix)
-	fmt.Println(s.Boxes())
+	if len(s.Rows()) != s.EdgeLength {
+		t.Errorf("Boxes count should be %d, but was %d", s.EdgeLength, len(s.Boxes()))
+	}
 }
