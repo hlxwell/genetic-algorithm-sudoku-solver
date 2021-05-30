@@ -21,3 +21,8 @@ func TestRows(t *testing.T) {
 	s := NewSudoku(matrix)
 	fmt.Println(s.Rows())
 }
+
+func TestBoxes(t *testing.T) {
+	s := NewSudoku(matrix)
+	fmt.Println(s.Boxes())
+}

@@ -1,6 +1,8 @@
 package main
 
-import "math"
+import (
+	"math"
+)
 
 type Sudoku struct {
 	Matrix        []string
@@ -17,6 +19,7 @@ func NewSudoku(matrix []string) *Sudoku {
 func (s *Sudoku) SetEdgeLength() {
 	size := len(s.Matrix)
 	s.EdgeLength = int(math.Sqrt(float64(size)))
+	// It will only support size of 4*4, 9*9, 16*16 ...
 	s.BoxEdgeLength = int(math.Sqrt(float64(s.EdgeLength)))
 }
 
@@ -44,6 +47,19 @@ func (s *Sudoku) Rows() [][]string {
 	return result
 }
 
-func (s *Sudoku) Boxes() {
+func (s *Sudoku) Boxes() [][]string {
+	result := [][]string{}
+	for i := 0; i < s.EdgeLength; i += s.BoxEdgeLength {
+		for j := 0; j < s.EdgeLength; j += s.BoxEdgeLength {
+			tmp := []string{}
+			for x := 0; x < s.BoxEdgeLength; x++ {
+				for y := 0; y < s.BoxEdgeLength; y++ {
+					tmp = append(tmp, s.Matrix[(i+x)*4+(j+y)])
+				}
+			}
+			result = append(result, tmp)
+		}
+	}
 
+	return result
 }
