@@ -8,18 +8,18 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-const GenomeSize = 81              // 16
-const CrossoverCount = 9           // Only for tail crossover method.
-const MutateCount = 1              //  mutation times for each generation
+const GenomeSize = 16              // 16
+const CrossoverCount = 4           // Only for tail crossover method.
+const MutateCount = 2              //  mutation times for each generation
 const PopulationSize = 100         // Populartion size
-const TotalValidSolutionCount = 27 // 12 for 4x4, 27 for 9x9
+const TotalValidSolutionCount = 12 // 12 for 4x4, 27 for 9x9
 const SelectionRate = 0.1          // selection rate for the next gen.
 
 // For 4x4
-// var Dictionary = []string{"W", "O", "R", "D"}
+var Dictionary = []string{"W", "O", "R", "D"}
 
 // For 9x9
-var Dictionary = []string{"1", "2", "3", "4", "5", "6", "7", "8", "9"}
+// var Dictionary = []string{"1", "2", "3", "4", "5", "6", "7", "8", "9"}
 
 type Chromosome struct {
 	// CurrentBestSolution *Sudoku
@@ -78,9 +78,11 @@ func (c *Chromosome) SwapMutate() {
 			rand2 := rand.Intn(len(p.Matrix))
 
 			// Swap 2 random elements.
-			tmp := p.Matrix[rand1]
-			p.Matrix[rand1] = p.Matrix[rand2]
-			p.Matrix[rand2] = tmp
+			if rand1 != rand2 {
+				tmp := p.Matrix[rand1]
+				p.Matrix[rand1] = p.Matrix[rand2]
+				p.Matrix[rand2] = tmp
+			}
 		}
 	}
 }
