@@ -62,7 +62,7 @@ func (c Chromosome) Fitness(s *Sudoku) int {
 func (c *Chromosome) Crossover() {
 	newPopulation := []*Sudoku{}
 	for i := 0; i < PopulationSize; i++ {
-		newPopulation = append(newPopulation, tailCrossover(c.SelectParent(), c.SelectParent()))
+		newPopulation = append(newPopulation, zippingCrossover(c.SelectParent(), c.SelectParent()))
 	}
 	c.Population = newPopulation
 }
@@ -158,7 +158,11 @@ func zippingCrossover(father *Sudoku, mother *Sudoku) *Sudoku {
 	newGenome := []string{}
 	for i := 0; i < len(father.Matrix); i += rowSize {
 		s, e := i, i+rowSize
-		newGenome = append(newGenome, father.Matrix[s:e]...)
+		if (i/rowSize)%2 == 0 {
+			newGenome = append(newGenome, father.Matrix[s:e]...)
+		} else {
+			newGenome = append(newGenome, mother.Matrix[s:e]...)
+		}
 	}
 	return NewSudoku(newGenome)
 }
