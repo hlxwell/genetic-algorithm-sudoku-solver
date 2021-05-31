@@ -8,19 +8,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-const GenomeSize = 16              // 16
-const CrossoverCount = 4           // Only for tail crossover method.
-const MutateCount = 2              //  mutation times for each generation
-const PopulationSize = 100         // Populartion size
-const TotalValidSolutionCount = 12 // 12 for 4x4, 27 for 9x9
-const SelectionRate = 0.1          // selection rate for the next gen.
-
-// For 4x4
-var Dictionary = []string{"W", "O", "R", "D"}
-
-// For 9x9
-// var Dictionary = []string{"1", "2", "3", "4", "5", "6", "7", "8", "9"}
-
 type Chromosome struct {
 	// CurrentBestSolution *Sudoku
 	Generation int
