@@ -42,12 +42,12 @@ func (c *Chromosome) GeneratePopulation() {
 
 // To generate one random solution
 func (c *Chromosome) GenerateGenome() *Sudoku {
-	result := make([]string, GenomeSize)
 	rand.Seed(time.Now().UnixNano())
-	for i := 0; i < GenomeSize; i++ {
-		n := rand.Intn(len(Dictionary))
-		result[i] = Dictionary[n]
+	result := []string{}
+	for len(result) < GenomeSize {
+		result = append(result, Dictionary...)
 	}
+	rand.Shuffle(GenomeSize, func(i, j int) { result[i], result[j] = result[j], result[i] })
 	return NewSudoku(result)
 }
 
