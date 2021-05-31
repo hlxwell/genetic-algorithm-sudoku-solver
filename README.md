@@ -7,6 +7,30 @@ go mod tidy
 go run -v ./...
 ```
 
+Result:
+
+```
+0th generation:
+Matrix:  [R O D W W D O R R O W W W O R D] Valid Solution:  6
+1th generation:
+Matrix:  [R O D W W D O R R O W D W O R D] Valid Solution:  7
+2th generation:
+Matrix:  [R O D W W D O R R O W D D W R O] Valid Solution:  10
+3th generation:
+Matrix:  [R O D W W D O R R O W D D W R O] Valid Solution:  10
+4th generation:
+Matrix:  [R O D W W D O R R O W D D W R O] Valid Solution:  10
+5th generation:
+Matrix:  [R O D W W D O R R O W D D W R O] Valid Solution:  10
+6th generation:
+Result:
+[R O D W]
+[W D O R]
+[O R W D]
+[D W R O]
+Total Valid Solutions:  12
+```
+
 ## Places that you can tune.
 
 1. CrossoverCount, which determine the crossover point.
