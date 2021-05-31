@@ -19,7 +19,7 @@ func main() {
 
 		c.SortPopulartionByFitness()
 		c.Crossover()       // Best solution crossover with all elements.
-		c.Mutate()          // Random Mutate several elements.
+		c.RandomMutate()    // Random Mutate several elements.
 		best := c.Elitism() // Select the best solution.
 
 		// return if reach the valid result.
