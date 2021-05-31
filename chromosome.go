@@ -10,16 +10,17 @@ const GenomeSize = 16
 const CrossoverCount = 8
 const MutateCount = 3
 const PopulationSize = 100
+const TotalValidSolutionCount = 12
 
 // const SelectionSize = 10
 
 var Dictionary = []string{"W", "O", "R", "D"}
 
 type Chromosome struct {
-	CurrentBestSolution *Sudoku
-	Generation          int
-	MaxGeneration       int
-	Population          []*Sudoku
+	// CurrentBestSolution *Sudoku
+	Generation    int
+	MaxGeneration int
+	Population    []*Sudoku
 }
 
 func NewChromosome(generation int) *Chromosome {
@@ -45,7 +46,7 @@ func (c *Chromosome) GenerateGenome() *Sudoku {
 		n := rand.Intn(len(Dictionary))
 		result[i] = Dictionary[n]
 	}
-	return &Sudoku{Matrix: result}
+	return NewSudoku(result)
 }
 
 // To evaludate the fitness of a genome.
@@ -55,19 +56,23 @@ func (c Chromosome) Fitness(s *Sudoku) int {
 }
 
 // Crossover: only crossover the last CrossoverCount elements.
+// https://en.wikipedia.org/wiki/Crossover_(genetic_algorithm)
 func (c *Chromosome) Crossover() {
 	var newGenome []string
 	newPopulation := []*Sudoku{}
 
-	for _, p := range c.Population {
+	for i := 0; i < PopulationSize; i++ {
+		father := c.SelectParent()
+		mather := c.SelectParent()
 		newGenome = []string{}
-		newGenome = append(c.CurrentBestSolution.Matrix[:GenomeSize-CrossoverCount], p.Matrix[GenomeSize-CrossoverCount:]...)
-		newPopulation = append(newPopulation, &Sudoku{Matrix: newGenome})
+		newGenome = append(father.Matrix[:GenomeSize-CrossoverCount], mather.Matrix[GenomeSize-CrossoverCount:]...)
+		newPopulation = append(newPopulation, NewSudoku(newGenome))
 	}
 
 	c.Population = newPopulation
 }
 
+// https://en.wikipedia.org/wiki/Mutation_(genetic_algorithm)
 func (c *Chromosome) Mutate() {
 	rand.Seed(time.Now().UnixNano())
 
@@ -82,7 +87,18 @@ func (c *Chromosome) Mutate() {
 	}
 }
 
-func (c *Chromosome) Select() {
+// Use Tournament method to choose parent.
+// https://en.wikipedia.org/wiki/Selection_(genetic_algorithm)
+func (c *Chromosome) SelectParent() *Sudoku {
+	selected1 := rand.Intn(PopulationSize)
+	selected2 := rand.Intn(PopulationSize)
+	if c.Fitness(c.Population[selected1]) > c.Fitness(c.Population[selected2]) {
+		return c.Population[selected1]
+	}
+	return c.Population[selected2]
+}
+
+func (c *Chromosome) Elitism() *Sudoku {
 	bestSolution := c.Population[0]
 	bestScore := c.Fitness(bestSolution)
 
@@ -94,22 +110,21 @@ func (c *Chromosome) Select() {
 		}
 	}
 
-	c.CurrentBestSolution = bestSolution
+	return bestSolution
 }
 
 func (c *Chromosome) Evolve() {
 	for i := 0; i < c.MaxGeneration; i++ {
-		fmt.Println("--- Generation: ", i)
+		fmt.Printf("%dth generation:\n", i)
 
-		c.Select()    // Select the best solution.
-		c.Crossover() // Best solution crossover with all elements.
-		c.Mutate()    // Random Mutate several elements.
-		c.Select()    // Select the best solution.
+		c.Crossover()       // Best solution crossover with all elements.
+		c.Mutate()          // Random Mutate several elements.
+		best := c.Elitism() // Select the best solution.
 
-		if c.CurrentBestSolution.ValidSolutionCount() == 12 {
+		if best.ValidSolutionCount() == TotalValidSolutionCount {
 			break
 		} else {
-			fmt.Println(c.CurrentBestSolution.Matrix, c.CurrentBestSolution.ValidSolutionCount())
+			fmt.Println(best.Matrix, best.ValidSolutionCount())
 		}
 	}
 }

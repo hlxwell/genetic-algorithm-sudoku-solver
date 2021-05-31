@@ -18,7 +18,6 @@ func NewSudoku(matrix []string) *Sudoku {
 }
 
 func (s *Sudoku) PrettyPrint() {
-	s.SetEdgeLength()
 	result := [][]string{}
 	for i := 0; i < len(s.Matrix); i += s.EdgeLength {
 		result = append(result, s.Matrix[i:i+s.EdgeLength])
@@ -27,6 +26,7 @@ func (s *Sudoku) PrettyPrint() {
 	for _, t := range result {
 		fmt.Println(t)
 	}
+	fmt.Println("Total Valid Solutions: ", s.ValidSolutionCount())
 }
 
 func (s *Sudoku) SetEdgeLength() {

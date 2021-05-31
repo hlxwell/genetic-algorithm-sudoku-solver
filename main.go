@@ -5,5 +5,5 @@ func main() {
 	c.GeneratePopulation()
 	c.Evolve()
 
-	c.CurrentBestSolution.PrettyPrint()
+	c.Elitism().PrettyPrint()
 }
