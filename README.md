@@ -66,7 +66,15 @@ Total Valid Solutions:  12
 ## Pseudocode
 
 ```
-TODO
+START
+Generate the initial population
+REPEAT
+  Compute fitness for all individual
+  Selection for parents
+  Crossover for next generation
+  Mutation each individual of the next generation
+UNTIL population has converged
+STOP
 ```
 
 ## Findings
