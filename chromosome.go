@@ -10,12 +10,13 @@ import (
 
 type Chromosome struct {
 	// CurrentBestSolution *Sudoku
+	InitBoard  []string
 	Generation int
 	Population []*Sudoku
 }
 
-func NewChromosome() *Chromosome {
-	return &Chromosome{}
+func NewChromosome(initBoard []string) *Chromosome {
+	return &Chromosome{InitBoard: initBoard}
 }
 
 // Generate Population
@@ -35,6 +36,14 @@ func (c *Chromosome) GenerateGenome() *Sudoku {
 		result = append(result, Dictionary...)
 	}
 	rand.Shuffle(GenomeSize, func(i, j int) { result[i], result[j] = result[j], result[i] })
+
+	// Fill InitBoard to random Genome.
+	for i, word := range c.InitBoard {
+		if word != "" {
+			result[i] = word
+		}
+	}
+
 	return NewSudoku(result)
 }
 
@@ -58,18 +67,25 @@ func (c *Chromosome) Crossover() {
 func (c *Chromosome) SwapMutate() {
 	rand.Seed(time.Now().UnixNano())
 
+	var rand1, rand2 int
 	for _, p := range c.Population {
 		// mutate MutateCount elements.
 		for i := 0; i < MutateCount; i++ {
-			rand1 := rand.Intn(len(p.Matrix))
-			rand2 := rand.Intn(len(p.Matrix))
+
+			// cannot mutate the init board elements
+			for {
+				rand1 = rand.Intn(len(p.Matrix))
+				rand2 = rand.Intn(len(p.Matrix))
+
+				if c.InitBoard[rand1] == "" && c.InitBoard[rand2] == "" && rand1 != rand2 {
+					break
+				}
+			}
 
 			// Swap 2 random elements.
-			if rand1 != rand2 {
-				tmp := p.Matrix[rand1]
-				p.Matrix[rand1] = p.Matrix[rand2]
-				p.Matrix[rand2] = tmp
-			}
+			tmp := p.Matrix[rand1]
+			p.Matrix[rand1] = p.Matrix[rand2]
+			p.Matrix[rand2] = tmp
 		}
 	}
 }
@@ -77,11 +93,20 @@ func (c *Chromosome) SwapMutate() {
 func (c *Chromosome) RandomMutate() {
 	rand.Seed(time.Now().UnixNano())
 
+	var randInDict int
 	for _, p := range c.Population {
 		// mutate MutateCount elements.
 		for i := 0; i < MutateCount; i++ {
 			randInMatrix := rand.Intn(len(p.Matrix))
-			randInDict := rand.Intn(len(Dictionary))
+
+			// cannot mutate the init board elements
+			for {
+				randInDict = rand.Intn(len(Dictionary))
+				if c.InitBoard[randInDict] == "" {
+					break
+				}
+			}
+
 			// Randomly replace 1 element.
 			p.Matrix[randInMatrix] = Dictionary[randInDict]
 		}

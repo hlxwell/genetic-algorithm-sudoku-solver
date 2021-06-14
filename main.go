@@ -6,10 +6,17 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+var InitBoard = []string{
+	"W", "", "", "O",
+	"", "D", "W", "",
+	"", "O", "R", "",
+	"R", "", "", "D",
+}
+
 const MaxGeneration = 100000 // max generations
 const GenomeSize = 16        // 16/81
 const CrossoverCount = 4     // Only for tail crossover method.
-const MutateCount = 2        //  mutation times for each generation
+const MutateCount = 1        //  mutation times for each generation
 const PopulationSize = 100   // Populartion size
 const SelectionRate = 0.1    // selection rate for the next gen.
 
@@ -29,7 +36,7 @@ func main() {
 		TotalValidSolutionCount = 12
 	}
 
-	c := NewChromosome()
+	c := NewChromosome(InitBoard)
 	c.GeneratePopulation()
 
 	for i := 0; i < MaxGeneration; i++ {
